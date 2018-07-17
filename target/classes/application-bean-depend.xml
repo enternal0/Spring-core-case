@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--构造方法参数装配-->
+    <!--1. 根据参数类型-->
+    <bean id="student" class="com.dan.springcore.examples.bean.depend.Student">
+        <constructor-arg type="java.lang.Integer" value="10"/>
+        <constructor-arg type="java.lang.String" value="王麻子"/>
+        <constructor-arg type="java.lang.Integer" value="0201"/>
+    </bean>
+
+    <bean class="com.dan.springcore.examples.bean.depend.Worker" id="worker">
+        <constructor-arg type="java.lang.String" value="李四"/>
+        <constructor-arg type="java.lang.String" value="比特科技"/>
+        <constructor-arg type="java.lang.Integer" value="23"/>
+    </bean>
+
+    <!--2. 根据参数名称 受限制，不常用-->
+    <!--<bean class="com.dan.springcore.examples.bean.depend.Worker" id="worker">-->
+        <!--<constructor-arg name="age" value="23"/>-->
+        <!--<constructor-arg name="company" value="工程大"/>-->
+        <!--<constructor-arg name="name" value="张三"/>-->
+    <!--</bean>-->
+
+     <!--<bean class="com.dan.springcore.examples.bean.depend.Person" id="person">-->
+         <!--<constructor-arg name="student" ref="student"/>-->
+         <!--<constructor-arg name="worker" ref="worker"/>-->
+     <!--</bean>-->
+
+
+    <!--3. 根据参数位置-->
+   <!--<bean id="worker" class="com.dan.springcore.examples.bean.depend.Worker">-->
+       <!--<constructor-arg index="0" value="王五"/>-->
+       <!--<constructor-arg index="1" value="比特科技"/>-->
+       <!--<constructor-arg index="2" value="23"/>-->
+   <!--</bean>-->
+
+    <!--<bean class="com.dan.springcore.examples.bean.depend.Person" id="person">-->
+        <!--<constructor-arg index="0" ref="student"/>-->
+        <!--<constructor-arg index="1" ref="worker"/>-->
+    <!--</bean>-->
+
+    <!--4. Bean的引用-->
+    <!--<bean id="person" class="com.dan.springcore.examples.bean.depend.Person">-->
+         <!--<constructor-arg ref="student"/>-->
+        <!--<constructor-arg ref="worker"/>-->
+    <!--</bean>-->
+
+    <!--Setter方法装配-->
+   <bean class="com.dan.springcore.examples.bean.depend.SetExample" id="setExample"/>
+
+    <!--依赖和配置详解-->
+    <!--直接赋值（基本类型和String);-->
+    <bean id="myDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+        <property name="url" value="jdbc:mysql://localhost:3306/mydb"/>
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="username" value="root"/>
+        <property name="password" value="960909"/>
+    </bean>
+
+    <!--idref和ref元素  ref装配的是目标Bean的实例，idref装配的是目标Bean的id-->
+    <bean id="person" class="com.dan.springcore.examples.bean.depend.Person">
+        <constructor-arg ref="worker"/>
+        <constructor-arg ref="student"/>
+    </bean>
+
+    <bean id="example" class="com.dan.springcore.examples.bean.depend.IdrefInstanceExample">
+        <constructor-arg>
+            <idref bean="student"/>
+        </constructor-arg>
+    </bean>
+
+
+
+    <!--内部bean 一个 <bean/> 元素定义在 <property/> 和 <constructor-arg/> 元素中,
+    不希望自己的这个类被别的类引用，可以考虑内部Bean-->
+    <!--<bean id="person" class="com.dan.springcore.examples.bean.depend.Person">-->
+        <!--<constructor-arg ref="worker"/>-->
+        <!--<constructor-arg >-->
+            <!--<bean class="com.dan.springcore.examples.bean.depend.Student" id="student">-->
+                <!--<constructor-arg type="java.lang.Integer" value="21"/>-->
+                <!--<constructor-arg type="java.lang.String" value="王五"/>-->
+                <!--<constructor-arg type="java.lang.Integer" value="0201"/>-->
+            <!--</bean>-->
+        <!--</constructor-arg>-->
+    <!--</bean>-->
+
+    <!--Collection-->
+     <!--<bean id="complexObject" class="com.dan.springcore.examples.bean.depend.ComplexObject" scope="singleton">-->
+    <!--<bean id="complexObject" class="com.dan.springcore.examples.bean.depend.ComplexObject" scope="prototype">-->
+    <bean id="complexObject" class="com.dan.springcore.examples.bean.depend.ComplexObject">
+         <property name="adminEmails">
+             <!--可以从文件中读取数据-->
+             <props>
+                 <prop key="administrator">administrator@example.org</prop>
+                 <prop key="support">support@example.org</prop>
+                 <prop key="development">development@example.org</prop>
+             </props>
+         </property>
+
+         <property name="someList">
+             <list>
+                 <value>a list element followed by a reference</value>
+                 <ref bean="myDataSource"/>
+             </list>
+         </property>
+
+         <property name="someMap">
+             <map>
+                 <entry key="an entry" value="just some string"/>
+                 <entry key="an student"  value-ref="student"/>
+                 <entry key-ref="worker" value="worker"/>
+             </map>
+         </property>
+
+         <property name="someSet">
+             <set>
+                 <value>just some string</value>
+                 <ref bean="myDataSource" />
+             </set>
+         </property>
+     </bean>
+
+    <!--Null和空字符串值-->
+    <!--<bean class="com.dan.springcore.examples.bean.depend.ExampleBean" id="exampleBean">-->
+        <!--<property name="email" value=""/>-->
+    <!--</bean>-->
+    <bean class="com.dan.springcore.examples.bean.depend.ExampleBean" id="exampleBean" lazy-init="true">
+        <property name="email">
+             <null/>
+        </property>
+    </bean>
+    <!--<bean class="com.dan.springcore.examples.bean.depend.ExampleBean" id="exampleBean">-->
+        <!--<property name="email" value="null">-->
+        <!--</property>-->
+    <!--</bean>-->
+
+</beans>

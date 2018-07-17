@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--Bean的实例化，构造方法实例化-->
+    <bean id="circular" class="com.dan.springcore.common.impl.Circular">
+        <constructor-arg name="radius" value="20"/>
+    </bean>
+
+    <bean id="triangle" class="com.dan.springcore.common.impl.Triangle">
+        <constructor-arg name="a" value="10"/>
+        <constructor-arg name="b" value="24"/>
+        <constructor-arg name="c" value="20"/>
+    </bean>
+    <bean id="rectangle" class="com.dan.springcore.common.impl.Rectangle">
+        <constructor-arg name="height" value="10"/>
+        <constructor-arg name="width" value="20"/>
+    </bean>
+
+    <!--ref里面会直接去配置文件找看是否有这个属性-->
+    <bean id="shapeCompute" class="com.dan.springcore.xml.XmlShapeCompute">
+        <property name="circular" ref="circular"/>
+        <property name="rectangle" ref="rectangle"/>
+        <property name="triangle" ref="triangle"/>
+    </bean>
+
+    <!--静态工厂方法实例化-->
+    <bean id="clientService2" class="com.dan.springcore.instance.ClientService"
+          factory-method="getClientService"/>
+
+    <!--实例工厂方法实例化-->
+    <bean id="serviceLocator" class="com.dan.springcore.instance.DefaultServiceLocator"/>
+    <bean id="ClientServiceInstance" factory-bean="serviceLocator" factory-method="createClientServiceInstance"/>
+
+</beans>

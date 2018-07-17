@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+    <!--Spring内置的bean systemProperties systemEnvironment-->
+    <!--<bean id="systemPropertiesBean" class="com.dan.springcore.spel.springInnerBean.SystemPropertiesBean">-->
+        <!--<property name="classPath" value="#{systemProperties['java.class.path']}"/>-->
+        <!--<property name="javaHome" value="#{systemProperties['java.home']}"/>-->
+        <!--<property name="javaVersion" value="#{systemProperties['java.version']}"/>-->
+        <!--<property name="osName" value="#{systemProperties['os.name']}"/>-->
+        <!--<property name="fileEncoding" value="#{systemProperties['file.encoding']}"/>-->
+        <!--<property name="fileSeparator" value="#{systemProperties['file.separator']}"/>-->
+        <!--<property name="pathSeparator" value="#{systemProperties['path.separator']}"/>-->
+    <!--</bean>-->
+
+    <!--<bean class="com.dan.springcore.spel.springInnerBean.SystemEnvironmentBean" id="environmentBean">-->
+        <!--<property name="appData" value="#{systemEnvironment['APPDATA']}"/>-->
+        <!--<property name="path" value="#{systemEnvironment['Path']}"/>-->
+        <!--<property name="systemDrive" value="#{systemEnvironment['SystemDrive']}"/>-->
+    <!--</bean>-->
+
+
+    <context:component-scan base-package="com.dan.springcore.spel"/>
+
+
+
+    <!--还可以使用配置资源文件    此种方法可直接配置多个资源文件-->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="fileEncoding" value="UTF-8"/>
+        <!--<property name="location" value="DB.properties"/>-->
+        <property name="locations" >
+            <list>
+                <value>DB.properties</value>
+                <value>dataBase.properties</value>
+            </list>
+        </property>
+    </bean>
+
+
+    <!--用$直接注入值的方式这样配置  资源配置文件 使用context:property-placeholder引用属性文件-->
+    <!--<context:property-placeholder file-encoding="UTF-8" location="classpath:DB.properties"/>-->
+    <!--用#给属性注入对象-->
+    <util:properties id="properties" location="dataBase.properties" />
+
+</beans>
